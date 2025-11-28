@@ -17,7 +17,11 @@ app.use(cors(corsConfig()));
 app.use(requestLogger);
 
 // Routes
-app.use('/', routes);
+// Health-check / root route
+app.get("/", (req, res) => {
+  res.json({ status: "OK", message: "Backend is running" });
+});
+
 
 // Error handling
 app.use(notFoundHandler);
