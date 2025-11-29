@@ -13,19 +13,11 @@ const config = getEnvConfig();
 // Middleware
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
-app.use(cors({
-  origin: ["https://taxt-ai-humanization-frontend.vercel.app/"],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
-}));
+app.use(cors(corsConfig()));
 app.use(requestLogger);
 
 // Routes
-// Health-check / root route
-app.get("/", (req, res) => {
-  res.json({ status: "OK", message: "Backend is running" });
-});
-
+app.use('/', routes);
 
 // Error handling
 app.use(notFoundHandler);

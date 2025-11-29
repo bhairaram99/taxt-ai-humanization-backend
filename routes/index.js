@@ -3,6 +3,11 @@ import transformationRoutes from './transformations.js';
 
 const router = express.Router();
 
+// --- ADD THIS ROUTE HERE ---
+router.get("/", (req, res) => {
+  res.json({ message: "API running", status: "ok" });
+});
+
 // API Routes
 router.use('/api', transformationRoutes);
 

@@ -35,10 +35,26 @@ export function requestLogger(req, res, next) {
  * CORS middleware configuration
  */
 export function corsConfig() {
+  const allowedOrigins = [
+    "http://localhost:5173",
+    process.env.CORS_ORIGIN,        // Vercel frontend
+  ].filter(Boolean);                // removes undefined/null
+
   return {
-    origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+    origin: function (origin, callback) {
+      // Allow server-to-server, health checks, and tools
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      console.log("❌ Blocked by CORS:", origin);
+      return callback(new Error("CORS error: origin not allowed"));
+    },
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   };
 }
+
